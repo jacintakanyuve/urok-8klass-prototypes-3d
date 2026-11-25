@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Труд (технология) 8 класс: Виды прототипов. Технология 3D-печати</title>
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
+      --primary: #1d4ed8;
+      --primary-dark: #1e3a8a;
+      --primary-light: #dbeafe;
+      --accent: #0f766e;
+      --accent-light: #ccfbf1;
+      --success: #059669;
+      --success-light: #d1fae5;
+      --warning: #d97706;
+      --warning-light: #fef3c7;
+      --danger: #dc2626;
+      --danger-light: #fee2e2;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --border: #cbd5e1;
+      --radius: 16px;
+      --shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 56px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+    }
+
+    .topbar-inner {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    .topbar-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    .date-pill {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-light);
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    .timer-box {
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transition: width 0.35s ease;
+    }
+
+    .nav-pills {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-top: 10px;
+      scrollbar-width: none;
+    }
+
+    .nav-pills::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-pill {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      padding: 8px 14px;
+      min-height: 40px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .nav-pill.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .nav-pill.done {
+      border-color: var(--success);
+      color: var(--success);
+      background: var(--success-light);
+    }
+
+    .nav-pill.active.done {
+      background: var(--success);
+      color: #fff;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 20px auto 0;
+      padding: 0 16px;
+    }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(203, 213, 225, 0.75);
+    }
+
+    .module {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .module.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 1.52rem;
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 1.28rem;
+      margin-bottom: 12px;
+      color: var(--primary-dark);
+    }
+
+    h3 {
+      font-size: 1.06rem;
+      margin: 16px 0 8px;
+    }
+
+    p {
+      margin-bottom: 12px;
+    }
+
+    ul, ol {
+      margin: 8px 0 14px 20px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    code {
+      font-family: "Courier New", Courier, monospace;
+      background: #e2e8f0;
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-size: 0.92em;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .time-tag {
+      display: inline-block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-light);
+      padding: 4px 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .callout {
+      background: var(--surface-soft);
+      border-left: 4px solid var(--primary);
+      padding: 14px 16px;
+      border-radius: 0 12px 12px 0;
+      margin: 14px 0;
+    }
+
+    .callout.warn {
+      border-left-color: var(--warning);
+      background: var(--warning-light);
+    }
+
+    .callout.success {
+      border-left-color: var(--success);
+      background: var(--success-light);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      margin: 14px 0;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .info-box {
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .info-box strong {
+      display: block;
+      font-size: 1.02rem;
+      margin-bottom: 6px;
+      color: var(--primary-dark);
+    }
+
+    .interactive-zone {
+      background: #f8fafc;
+      border: 2px dashed #93c5fd;
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-top: 18px;
+    }
+
+    .interactive-title {
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 18px;
+      min-height: 44px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e1;
+    }
+
+    .btn-success {
+      background: var(--success);
+    }
+
+    .btn-success:hover {
+      background: #047857;
+    }
+
+    .btn-sm {
+      padding: 8px 14px;
+      min-height: 44px;
+      font-size: 0.88rem;
+      border-radius: 9px;
+    }
+
+    .nav-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 11px 14px;
+      min-height: 44px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 1rem;
+      margin: 8px 0 12px;
+    }
+
+    /* Интерактивная ментальная карта прототипов */
+    .mindmap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+      gap: 10px;
+      margin: 12px 0;
+    }
+
+    .mm-node {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      min-height: 44px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.18s;
+      font-family: inherit;
+      color: var(--text);
+    }
+
+    .mm-node:hover {
+      border-color: var(--primary);
+      background: #eff6ff;
+    }
+
+    .mm-node.active {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      box-shadow: 0 3px 12px rgba(29, 78, 216, 0.14);
+    }
+
+    .mm-node-title {
+      font-weight: 800;
+      font-size: 0.94rem;
+      color: var(--primary-dark);
+      margin-bottom: 4px;
+    }
+
+    .mm-node-sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* Карточки выбора */
+    .sort-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+
+    .sort-item-text {
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+    }
+
+    .sort-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .choice-btn {
+      background: var(--surface-soft);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      min-height: 44px;
+      border-radius: 9px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .choice-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .choice-btn.selected {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .choice-btn.correct {
+      background: var(--success);
+      color: #fff;
+      border-color: var(--success);
+    }
+
+    .choice-btn.wrong {
+      background: var(--danger);
+      color: #fff;
+      border-color: var(--danger);
+    }
+
+    /* SVG сцены */
+    .svg-box {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin: 12px 0;
+      text-align: center;
+      overflow-x: auto;
+    }
+
+    .svg-box svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .svg-click {
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .svg-click:hover {
+      opacity: 0.85;
+    }
+
+    /* Таблица сравнения технологий */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 12px 0;
+    }
+
+    table.tech-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--surface);
+      font-size: 0.9rem;
+      min-width: 540px;
+    }
+
+    table.tech-table th, table.tech-table td {
+      border: 1px solid var(--border);
+      padding: 9px 11px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    table.tech-table th {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+    }
+
+    /* Симулятор слайсера */
+    .slicer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(275px, 1fr));
+      gap: 16px;
+      align-items: start;
+      margin-top: 10px;
+    }
+
+    .telemetry-panel {
+      background: #0f172a;
+      color: #e2e8f0;
+      font-family: "Courier New", Courier, monospace;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 0.87rem;
+      line-height: 1.65;
+      margin-top: 10px;
+    }
+
+    .telemetry-panel strong {
+      color: #38bdf8;
+    }
+
+    /* Конструктор последовательности (Модуль 3) */
+    .order-pool {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .order-chip {
+      background: var(--surface);
+      border: 1px solid var(--primary);
+      color: var(--primary-dark);
+      padding: 9px 14px;
+      min-height: 44px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s;
+    }
+
+    .order-chip:hover {
+      background: var(--primary-light);
+    }
+
+    .order-slot {
+      background: var(--surface);
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 8px;
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .order-slot.filled {
+      border-style: solid;
+      border-color: var(--primary);
+      color: var(--text);
+      background: #fff;
+    }
+
+    /* Тест */
+    .quiz-q {
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .quiz-opt {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 11px 14px;
+      min-height: 44px;
+      margin-top: 8px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.93rem;
+      transition: all 0.15s;
+    }
+
+    .quiz-opt:hover {
+      border-color: var(--primary);
+    }
+
+    .quiz-opt.selected {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      font-weight: 600;
+    }
+
+    .quiz-opt.correct {
+      border-color: var(--success);
+      background: var(--success-light);
+      color: #065f46;
+      font-weight: 700;
+    }
+
+    .quiz-opt.wrong {
+      border-color: var(--danger);
+      background: var(--danger-light);
+      color: #991b1b;
+    }
+
+    .quiz-explain {
+      display: none;
+      margin-top: 10px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 0.87rem;
+      background: var(--warning-light);
+      border-left: 3px solid var(--warning);
+      color: #78350f;
+    }
+
+    /* Карточка результата */
+    .cert-box {
+      border: 3px solid var(--primary);
+      background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
+      border-radius: 18px;
+      padding: 24px;
+      text-align: center;
+      margin-top: 18px;
+    }
+
+    .cert-date-badge {
+      display: inline-block;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      font-weight: 700;
+      font-size: 0.92rem;
+      padding: 5px 14px;
+      border-radius: 999px;
+      margin: 6px 0 4px;
+    }
+
+    .cert-grade {
+      display: inline-block;
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--success);
+      background: var(--success-light);
+      padding: 8px 24px;
+      border-radius: 12px;
+      margin: 12px 0;
+    }
+
+    .feedback {
+      margin-top: 10px;
+      font-weight: 600;
+      font-size: 0.93rem;
+    }
+
+    @media (max-width: 600px) {
+      .card { padding: 16px; }
+      h1 { font-size: 1.32rem; }
+      h2 { font-size: 1.16rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-row">
+        <span class="badge">Труд (технология) • 8 класс</span>
+        <span class="date-pill">Дата: 25.11.2026</span>
+        <span class="timer-box" id="timerDisplay">Время: 00:00 / 45:00</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressBar"></div>
+      </div>
+      <nav class="nav-pills" id="navPills">
+        <button class="nav-pill active" onclick="goToStep(0)">Старт</button>
+        <button class="nav-pill" onclick="goToStep(1)">1. Виды прототипов</button>
+        <button class="nav-pill" onclick="goToStep(2)">2. Технологии 3D-печати</button>
+        <button class="nav-pill" onclick="goToStep(3)">3. Слайсер и этапы печати</button>
+        <button class="nav-pill" onclick="goToStep(4)">4. Итоговый контроль</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ШАГ 0: ВВЕДЕНИЕ -->
+    <section class="module active" id="step-0">
+      <div class="card">
+        <span class="time-tag">Самостоятельный урок • 45 минут • 25 ноября 2026 г.</span>
+        <h1>Виды прототипов. Технология 3D-печати</h1>
+        <p>Перед запуском нового смартфона, узла автомобиля или медицинского прибора в серийное производство инженеры создают <strong>прототипы</strong> — опытные образцы для проверки внешнего вида, эргономики и работоспособности. Быстрее всего сегодня прототипы создают с помощью <strong>аддитивных технологий (3D-печати)</strong>.</p>
+        <p>На этом уроке ты систематизируешь виды прототипов, разберёшь устройство 3D-принтера и три промышленных метода печати (FDM, SLA, SLS), а также попробуешь себя в роли инженера 3D-печати в интерактивном симуляторе слайсера.</p>
+
+        <div class="callout">
+          <strong>План работы на урок (45 минут):</strong><br />
+          1. Изучить классификацию прототипов по ментальной карте и распределить 5 реальных заказов.<br />
+          2. Исследовать устройство FDM-принтера на интерактивной схеме и сравнить FDM, SLA и SLS.<br />
+          3. Настроить параметры в симуляторе слайсера, выстроить цикл 3D-печати и пройти итоговый тест (8 вопросов).
+        </div>
+
+        <label for="studentNameInput"><strong>Введи фамилию, имя и класс перед началом:</strong></label>
+        <input type="text" id="studentNameInput" class="input-field" placeholder="Например: Егоров Даниил, 8-А" />
+
+        <div class="nav-footer">
+          <span></span>
+          <button class="btn" onclick="startLesson()">Начать урок →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ШАГ 1: ВИДЫ ПРОТОТИПОВ -->
+    <section class="module" id="step-1">
+      <div class="card">
+        <span class="time-tag">Модуль 1 • Рекомендуемое время: 11 минут</span>
+        <h2>1. Понятие прототипа и виды прототипов</h2>
+        <p><strong>Прототип</strong> — это предварительный опытный образец проектируемого изделия, который изготавливают для проверки технических решений, выявления ошибок конструкции и согласования внешнего вида до запуска дорогостоящего серийного производства.</p>
+
+        <div class="grid-2">
+          <div class="info-box">
+            <strong>Цифровой (виртуальный) прототип</strong>
+            Существует в памяти компьютера в виде 3D-модели в САПР (КОМПАС-3D, SolidWorks). Позволяет заранее проверить сборку, прочность и массу детали без затрат материала.
+          </div>
+          <div class="info-box">
+            <strong>Физический (материальный) прототип</strong>
+            Реальный объёмный образец из картона, пластика, фотополимера или металла, который можно подержать в руках, примерить и испытать на стенде.
+          </div>
+        </div>
+
+        <h3>Интерактивная ментальная карта: Виды физических прототипов по назначению</h3>
+        <p style="font-size: 0.92rem;">Нажимай на узлы карты, чтобы раскрыть задачи, материалы и примеры каждого вида:</p>
+
+        <div class="mindmap-grid" id="protoMindmap">
+          <button class="mm-node active" onclick="showProtoNode('search', this)">
+            <div class="mm-node-title">1. Поисковый (черновой)</div>
+            <div class="mm-node-sub">Быстрая проверка идеи</div>
+          </button>
+          <button class="mm-node" onclick="showProtoNode('visual', this)">
+            <div class="mm-node-title">2. Демонстрационный</div>
+            <div class="mm-node-sub">Дизайн и эргономика</div>
+          </button>
+          <button class="mm-node" onclick="showProtoNode('func', this)">
+            <div class="mm-node-title">3. Функциональный</div>
+            <div class="mm-node-sub">Проверка работы узла</div>
+          </button>
+          <button class="mm-node" onclick="showProtoNode('preprod', this)">
+            <div class="mm-node-title">4. Предсерийный</div>
+            <div class="mm-node-sub">Эталон перед серией</div>
+          </button>
+        </div>
+
+        <div class="callout" id="protoNodeDetail"></div>
+
+        <div class="interactive-zone">
+          <div class="interactive-title">Тренажёр: Определи вид прототипа для 5 производственных задач</div>
+          <p style="font-size: 0.92rem;">Выбери наиболее подходящий вид прототипа в каждом случае:</p>
+          <div id="m1Container"></div>
+          <button class="btn btn-sm" onclick="checkM1()">Проверить ответы</button>
+          <div class="feedback" id="m1Feedback"></div>
+        </div>
+
+        <div class="nav-footer">
+          <button class="btn btn-secondary" onclick="goToStep(0)">← Назад</button>
+          <button class="btn" onclick="goToStep(2)">Дальше: Технологии 3D-печати →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ШАГ 2: ТЕХНОЛОГИЯ 3D-ПЕЧАТИ -->
+    <section class="module" id="step-2">
+      <div class="card">
+        <span class="time-tag">Модуль 2 • Рекомендуемое время: 13 минут</span>
+        <h2>2. Аддитивное производство и технологии 3D-печати</h2>
+        <p>В традиционной обработке (точение, фрезерование) лишний материал <em>срезают</em> с цельной заготовки — это <strong>субтрактивный</strong> способ. <strong>3D-печать</strong> относится к <strong>аддитивным технологиям</strong> (от англ. <em>add</em> — добавлять): изделие выращивается <strong>послойно</strong> снизу вверх по цифровой 3D-модели с минимальным количеством отходов.</p>
+
+        <div class="table-wrap">
+          <table class="tech-table">
+            <thead>
+              <tr>
+                <th>Технология</th>
+                <th>Исходный материал</th>
+                <th>Принцип создания слоя</th>
+                <th>Особенности и применение</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>FDM / FFF</strong><br />(послойное наплавление)</td>
+                <td>Пластиковая нить на катушке — <strong>филамент</strong> (PLA, PETG, ABS)</td>
+                <td>Расплавленный пластик выдавливается через нагретое сопло экструдера и застывает</td>
+                <td>Самая доступная и популярная в школах, мастерских и быстром прототипировании</td>
+              </tr>
+              <tr>
+                <td><strong>SLA / MSLA</strong><br />(стереолитография)</td>
+                <td>Жидкая <strong>фотополимерная смола</strong> в ванне</td>
+                <td>Ультрафиолетовый лазер или экран засвечивает и отверждает тонкий слой смолы</td>
+                <td>Сверхвысокая точность и гладкая поверхность (ювелирка, стоматология, миниатюры)</td>
+              </tr>
+              <tr>
+                <td><strong>SLS / SLM</strong><br />(лазерное спекание)</td>
+                <td>Мелкодисперсный <strong>порошок</strong> (нейлон, полиамид или металл)</td>
+                <td>Мощный лазер выборочно спекает частицы порошка в каждом слое</td>
+                <td>Высокая прочность; неспечённый порошок сам служит поддержкой для сложной геометрии</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="interactive-zone">
+          <div class="interactive-title">Интерактивная схема: Устройство FDM 3D-принтера</div>
+          <p style="font-size: 0.92rem;">Нажимай на кнопки узлов (или прямо на элементы чертежа), чтобы изучить конструкцию самого распространённого 3D-принтера:</p>
+
+          <div class="svg-box">
+            <svg viewBox="0 0 540 270" style="max-width:540px;">
+              <!-- Основание и рама (Оси X, Y, Z) -->
+              <rect x="65" y="222" width="330" height="24" rx="5" fill="#334155" />
+              <rect class="svg-click" x="95" y="38" width="18" height="186" fill="#64748b" onclick="showPrinterPart('axes')" />
+              <rect class="svg-click" x="350" y="38" width="18" height="186" fill="#64748b" onclick="showPrinterPart('axes')" />
+              <rect class="svg-click" x="95" y="34" width="273" height="14" rx="3" fill="#475569" onclick="showPrinterPart('axes')" />
+              <!-- Портал оси X -->
+              <rect class="svg-click" x="113" y="102" width="237" height="14" fill="#94a3b8" onclick="showPrinterPart('axes')" />
+
+              <!-- Катушка с филаментом -->
+              <g class="svg-click" onclick="showPrinterPart('spool')">
+                <circle cx="445" cy="86" r="44" fill="#e2e8f0" stroke="#334155" stroke-width="4" />
+                <circle cx="445" cy="86" r="32" fill="none" stroke="#2563eb" stroke-width="14" />
+                <circle cx="445" cy="86" r="14" fill="#ffffff" stroke="#475569" stroke-width="3" />
+                <text x="445" y="148" font-size="11" font-weight="bold" text-anchor="middle" fill="#1e3a8a">1. Филамент</text>
+              </g>
+
+              <!-- Трубка подачи / нить -->
+              <path d="M 412 68 Q 360 22 250 88" fill="none" stroke="#2563eb" stroke-width="3.5" />
+
+              <!-- Экструдер и подающий механизм -->
+              <g class="svg-click" onclick="showPrinterPart('extruder')">
+                <rect x="210" y="84" width="56" height="44" rx="6" fill="#1d4ed8" stroke="#1e3a8a" stroke-width="2" />
+                <circle cx="238" cy="106" r="11" fill="#dbeafe" stroke="#1e3a8a" stroke-width="2" />
+                <text x="238" y="76" font-size="11" font-weight="bold" text-anchor="middle" fill="#1d4ed8">2. Экструдер</text>
+              </g>
+
+              <!-- Хотэнд и сопло -->
+              <g class="svg-click" onclick="showPrinterPart('nozzle')">
+                <rect x="225" y="128" width="26" height="18" rx="2" fill="#dc2626" />
+                <polygon points="229,146 247,146 238,162" fill="#f59e0b" stroke="#b45309" stroke-width="1.5" />
+                <text x="305" y="152" font-size="11" font-weight="bold" fill="#b91c1c">3. Хотэнд и сопло</text>
+              </g>
+
+              <!-- Печатаемая деталь на столе -->
+              <g>
+                <rect x="195" y="186" width="86" height="10" fill="#60a5fa" stroke="#1d4ed8" stroke-width="1" />
+                <rect x="195" y="176" width="86" height="10" fill="#93c5fd" stroke="#1d4ed8" stroke-width="1" />
+                <rect x="206" y="166" width="64" height="10" fill="#bfdbfe" stroke="#1d4ed8" stroke-width="1" />
+              </g>
+
+              <!-- Нагреваемый рабочий стол -->
+              <g class="svg-click" onclick="showPrinterPart('bed')">
+                <rect x="135" y="196" width="206" height="12" rx="3" fill="#0f766e" stroke="#115e59" stroke-width="2" />
+                <rect x="155" y="208" width="10" height="14" fill="#94a3b8" />
+                <rect x="311" y="208" width="10" height="14" fill="#94a3b8" />
+                <text x="438" y="206" font-size="11" font-weight="bold" fill="#0f766e">4. Рабочий стол</text>
+              </g>
+
+              <text x="48" y="135" font-size="11" font-weight="bold" text-anchor="middle" fill="#475569">5. Оси</text>
+              <text x="48" y="149" font-size="11" font-weight="bold" text-anchor="middle" fill="#475569">X, Y, Z</text>
+            </svg>
+          </div>
+
+          <div class="sort-buttons" style="justify-content: center; margin-bottom: 10px;" id="printerPartBtns">
+            <button class="choice-btn selected" onclick="showPrinterPart('spool', this)">1. Катушка (филамент)</button>
+            <button class="choice-btn" onclick="showPrinterPart('extruder', this)">2. Экструдер</button>
+            <button class="choice-btn" onclick="showPrinterPart('nozzle', this)">3. Хотэнд и сопло</button>
+            <button class="choice-btn" onclick="showPrinterPart('bed', this)">4. Нагреваемый стол</button>
+            <button class="choice-btn" onclick="showPrinterPart('axes', this)">5. Оси и двигатели</button>
+          </div>
+
+          <div class="info-box" id="printerPartDesc"></div>
+
+          <hr style="margin: 18px 0; border: none; border-top: 1px solid var(--border);" />
+
+          <div class="interactive-title">Тренажёр: Подбери технологию 3D-печати под задачу</div>
+          <div id="m2Container"></div>
+          <button class="btn btn-sm" onclick="checkM2()">Проверить выбор</button>
+          <div class="feedback" id="m2Feedback"></div>
+        </div>
+
+        <div class="nav-footer">
+          <button class="btn btn-secondary" onclick="goToStep(1)">← Назад</button>
+          <button class="btn" onclick="goToStep(3)">Дальше: Слайсер и цикл печати →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ШАГ 3: СИМУЛЯТОР СЛАЙСЕРА И ЭТАПЫ 3D-ПЕЧАТИ -->
+    <section class="module" id="step-3">
+      <div class="card">
+        <span class="time-tag">Модуль 3 • Рекомендуемое время: 13 минут</span>
+        <h2>3. Подготовка модели в слайсере и этапы 3D-печати</h2>
+        <p>Сам 3D-принтер не понимает обычную 3D-модель (<code>.STL</code> или <code>.OBJ</code>). Чтобы превратить её в движение моторов и нагрев сопла, используют специальную программу — <strong>слайсер</strong> (Cura, PrusaSlicer, OrcaSlicer). Слайсер «нарезает» модель на тонкие горизонтальные слои и создаёт файл управляющих команд — <strong>G-code</strong>.</p>
+
+        <div class="interactive-zone">
+          <div class="interactive-title">Практикум 3.1: Интерактивный симулятор слайсера FDM</div>
+          <p style="font-size: 0.92rem;"><strong>Инженерная задача:</strong> Нужно напечатать <strong>силовой Г-образный кронштейн с нависающим выступом</strong> для крепления уличного фонаря (под открытым небом). Настрой слайсер так, чтобы деталь выдержала нагрузку, не разрушилась от влаги и солнца, а нависающий край не провис при печати:</p>
+
+          <div class="slicer-grid">
+            <div>
+              <div style="font-weight: 700; font-size: 0.9rem; margin-bottom: 6px;">1. Высота слоя (качество / скорость):</div>
+              <div class="sort-buttons" style="margin-bottom: 12px;" id="slLayerBtns">
+                <button class="choice-btn" onclick="setSlicer('layer', 0.12, this)">0,12 мм (Гладкий)</button>
+                <button class="choice-btn selected" onclick="setSlicer('layer', 0.20, this)">0,20 мм (Стандарт)</button>
+                <button class="choice-btn" onclick="setSlicer('layer', 0.28, this)">0,28 мм (Быстрый)</button>
+              </div>
+
+              <div style="font-weight: 700; font-size: 0.9rem; margin-bottom: 6px;">2. Плотность заполнения (Infill):</div>
+              <div class="sort-buttons" style="margin-bottom: 12px;" id="slInfillBtns">
+                <button class="choice-btn selected" onclick="setSlicer('infill', 15, this)">15% (Макет)</button>
+                <button class="choice-btn" onclick="setSlicer('infill', 50, this)">50% (Прочный)</button>
+                <button class="choice-btn" onclick="setSlicer('infill', 85, this)">85% (Усиленный)</button>
+              </div>
+
+              <div style="font-weight: 700; font-size: 0.9rem; margin-bottom: 6px;">3. Поддержки (Supports) под нависанием:</div>
+              <div class="sort-buttons" style="margin-bottom: 12px;" id="slSupBtns">
+                <button class="choice-btn selected" onclick="setSlicer('supports', false, this)">Выключены</button>
+                <button class="choice-btn" onclick="setSlicer('supports', true, this)">Включены</button>
+              </div>
+
+              <div style="font-weight: 700; font-size: 0.9rem; margin-bottom: 6px;">4. Пластик (филамент):</div>
+              <div class="sort-buttons" style="margin-bottom: 12px;" id="slMatBtns">
+                <button class="choice-btn selected" onclick="setSlicer('mat', 'PLA', this)">PLA (для дома)</button>
+                <button class="choice-btn" onclick="setSlicer('mat', 'PETG', this)">PETG (улица / прочный)</button>
+                <button class="choice-btn" onclick="setSlicer('mat', 'FLEX', this)">TPU / FLEX (мягкий)</button>
+              </div>
+
+              <button class="btn btn-sm btn-success" onclick="checkSlicerMission()">Проверить настройки слайсера</button>
+              <div class="feedback" id="m3aFeedback"></div>
+            </div>
+
+            <div>
+              <div class="svg-box" style="margin-top: 0;" id="slicerPreviewSvg"></div>
+              <div class="telemetry-panel" id="slicerTelemetry"></div>
+            </div>
+          </div>
+
+          <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--border);" />
+
+          <div class="interactive-title">Практикум 3.2: Собери правильную последовательность этапов 3D-печати</div>
+          <p style="font-size: 0.92rem;">Нажимай на карточки этапов в правильном порядке от 1-го до 5-го:</p>
+
+          <div class="order-pool" id="orderPool"></div>
+          <div id="orderSlots">
+            <div class="order-slot" id="slot-0">Этап 1: ...</div>
+            <div class="order-slot" id="slot-1">Этап 2: ...</div>
+            <div class="order-slot" id="slot-2">Этап 3: ...</div>
+            <div class="order-slot" id="slot-3">Этап 4: ...</div>
+            <div class="order-slot" id="slot-4">Этап 5: ...</div>
+          </div>
+
+          <div style="margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="btn btn-sm btn-secondary" onclick="resetOrder()">Сбросить</button>
+            <button class="btn btn-sm" onclick="checkOrder()">Проверить этапы</button>
+          </div>
+          <div class="feedback" id="m3bFeedback"></div>
+        </div>
+
+        <div class="nav-footer">
+          <button class="btn btn-secondary" onclick="goToStep(2)">← Назад</button>
+          <button class="btn" onclick="goToStep(4)">Перейти к итоговому контролю →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ШАГ 4: ИТОГОВЫЙ КОНТРОЛЬ -->
+    <section class="module" id="step-4">
+      <div class="card">
+        <span class="time-tag">Модуль 4 • Рекомендуемое время: 8 минут</span>
+        <h2>4. Итоговый контроль знаний</h2>
+        <p>Ответь на 8 вопросов по всем разделам урока. После проверки ты увидишь подробный разбор ошибок и получишь именную карточку с оценкой.</p>
+
+        <div id="finalQuizContainer"></div>
+
+        <button class="btn btn-success" style="width: 100%; margin-top: 10px;" onclick="finishLesson()">Завершить урок и получить оценку</button>
+
+        <div id="certificateSection" style="display: none;">
+          <div class="cert-box">
+            <div style="font-size: 0.88rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: 700;">
+              Карточка прохождения урока • Труд (технология) 8 класс
+            </div>
+            <div class="cert-date-badge">Дата урока: 25 ноября 2026 г. (25.11.2026)</div>
+            <h2 id="certStudentName" style="margin: 8px 0; color: var(--text);">Ученик 8 класса</h2>
+            <p style="margin-bottom: 4px;">Тема: «Виды прототипов. Технология 3D-печати»</p>
+            <div class="cert-grade" id="certGradeText">Оценка: 5 (Отлично)</div>
+            <p id="certStats" style="font-weight: 600;"></p>
+            <p id="certPracticeSummary" style="font-size: 0.9rem; color: var(--text-muted);"></p>
+            <p id="certCode" style="font-family: monospace; font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;"></p>
+            <div class="callout success" style="text-align: left; margin-top: 12px;">
+              Сделай скриншот этой карточки и отправь учителю для выставления оценки в журнал!
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-footer">
+          <button class="btn btn-secondary" onclick="goToStep(3)">← Вернуться к симулятору</button>
+          <button class="btn btn-secondary btn-sm" onclick="resetAll()">Пройти заново</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // --- СОСТОЯНИЕ УРОКА ---
+    const state = {
+      currentStep: 0,
+      completedSteps: [false, false, false, false, false],
+      secondsElapsed: 0,
+      studentName: "",
+      slicer: { layer: 0.20, infill: 15, supports: false, mat: "PLA" },
+      m3aDone: false,
+      m3bDone: false
+    };
+
+    // --- ТАЙМЕР ---
+    setInterval(() => {
+      state.secondsElapsed++;
+      const m = String(Math.floor(state.secondsElapsed / 60)).padStart(2, "0");
+      const s = String(state.secondsElapsed % 60).padStart(2, "0");
+      document.getElementById("timerDisplay").textContent = `Время: ${m}:${s} / 45:00`;
+    }, 1000);
+
+    // --- НАВИГАЦИЯ ---
+    function goToStep(idx) {
+      document.querySelectorAll(".module").forEach((el, i) => el.classList.toggle("active", idx === i));
+      document.querySelectorAll(".nav-pill").forEach((pill, i) => {
+        pill.classList.toggle("active", idx === i);
+        pill.classList.toggle("done", state.completedSteps[i]);
+      });
+      state.currentStep = idx;
+      updateProgress();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function markStepDone(idx) {
+      state.completedSteps[idx] = true;
+      const pills = document.querySelectorAll(".nav-pill");
+      if (pills[idx]) pills[idx].classList.add("done");
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const done = state.completedSteps.filter(Boolean).length;
+      const pct = Math.min(100, Math.round((done / 4) * 100));
+      document.getElementById("progressBar").style.width = `${pct}%`;
+    }
+
+    function startLesson() {
+      const val = document.getElementById("studentNameInput").value.trim();
+      state.studentName = val || "Ученик 8 класса";
+      markStepDone(0);
+      goToStep(1);
+    }
+
+    // --- УНИВЕРСАЛЬНЫЙ РЕНДЕР ТРЕНАЖЁРОВ ---
+    const sortStorage = { m1Container: {}, m2Container: {} };
+
+    function buildSortModule(containerId, items, options) {
+      const box = document.getElementById(containerId);
+      box.innerHTML = "";
+      items.forEach((item, idx) => {
+        const div = document.createElement("div");
+        div.className = "sort-item";
+        div.innerHTML = `
+          <div class="sort-item-text"><strong>${idx + 1}.</strong> ${item.text}</div>
+          <div class="sort-buttons" id="${containerId}-btns-${idx}">
+            ${options.map(opt => `
+              <button class="choice-btn" onclick="selectSortOption('${containerId}', ${idx}, '${opt}', this)">${opt}</button>
+            `).join("")}
+          </div>
+        `;
+        box.appendChild(div);
+      });
+    }
+
+    function selectSortOption(containerId, idx, opt, btn) {
+      sortStorage[containerId][idx] = opt;
+      const group = document.getElementById(`${containerId}-btns-${idx}`);
+      group.querySelectorAll(".choice-btn").forEach(b => b.classList.remove("selected", "correct", "wrong"));
+      btn.classList.add("selected");
+    }
+
+    function evaluateSortModule(containerId, items, feedbackId, stepIndex) {
+      let ok = 0;
+      items.forEach((item, idx) => {
+        const group = document.getElementById(`${containerId}-btns-${idx}`);
+        const chosen = sortStorage[containerId][idx];
+        group.querySelectorAll(".choice-btn").forEach(b => {
+          b.classList.remove("selected", "correct", "wrong");
+          if (b.textContent === chosen) {
+            if (chosen === item.answer) {
+              b.classList.add("correct");
+              ok++;
+            } else {
+              b.classList.add("wrong");
+            }
+          }
+        });
+      });
+      const fb = document.getElementById(feedbackId);
+      if (ok === items.length) {
+        fb.style.color = "var(--success)";
+        fb.textContent = `Отлично! Все ${ok} из ${items.length} ответов верны!`;
+        markStepDone(stepIndex);
+      } else {
+        fb.style.color = "var(--warning)";
+        fb.textContent = `Правильно: ${ok} из ${items.length}. Исправь выделенные красным пункты.`;
+      }
+    }
+
+    // --- МОДУЛЬ 1: МЕНТАЛЬНАЯ КАРТА ПРОТОТИПОВ ---
+    const protoDetails = {
+      search: "<strong>Поисковый (черновой) прототип:</strong> нужен на самом старте проекта, чтобы дёшево и за пару часов проверить общую идею, габариты и компоновку. <em>Материалы:</em> бумага, картон, пенопласт, пластилин или быстрая черновая 3D-печать. <em>Пример:</em> картонный макет подставки под планшет.",
+      visual: "<strong>Демонстрационный (визуальный) прототип:</strong> точно передаёт внешний вид, форму, цвет, текстуру и удобство хвата (эргономику), но не содержит рабочей электроники или механики. <em>Пример:</em> неработающий корпус нового смартфона на выставке или презентации инвесторам.",
+      func: "<strong>Функциональный (рабочий) прототип:</strong> полноценно выполняет заложенные функции — двигается, выдерживает механические нагрузки, пропускает жидкость или включает электронику. Внешний вид может быть упрощённым. <em>Пример:</em> напечатанный из PETG действующий редуктор робота для испытаний.",
+      preprod: "<strong>Промышленный (предсерийный) прототип:</strong> финальный образец, максимально повторяющий будущее серийное изделие и по внешнему виду, и по материалам, и по характеристикам. По нему проводят сертификацию и наладку конвейера."
+    };
+
+    function showProtoNode(key, btn) {
+      document.querySelectorAll("#protoMindmap .mm-node").forEach(el => el.classList.remove("active"));
+      if (btn) btn.classList.add("active");
+      document.getElementById("protoNodeDetail").innerHTML = protoDetails[key];
+    }
+    showProtoNode("search");
+
+    const m1Data = [
+      {
+        text: "Дизайнеры напечатали и покрасили корпус новых беспроводных наушников без электроники внутри, чтобы показать их заказчику и оценить форму.",
+        answer: "Демонстрационный"
+      },
+      {
+        text: "Инженеры собрали действующий узел захвата для школьного робота из прочного пластика PETG и тестируют, удержит ли он груз массой 2 кг.",
+        answer: "Функциональный"
+      },
+      {
+        text: "Изобретатель за 30 минут склеил из гофрокартона и скотча набросок органайзера, чтобы прикинуть, поместятся ли в него инструменты.",
+        answer: "Поисковый (черновой)"
+      },
+      {
+        text: "Завод выпустил опытную партию из 5 электрочайников из серийных материалов для итоговой сертификации перед массовым выпуском.",
+        answer: "Предсерийный"
+      },
+      {
+        text: "Конструктор проверил в программе КОМПАС-3D, не задевают ли вращающиеся шестерни корпус механизма, ещё до изготовления деталей.",
+        answer: "Цифровой прототип"
+      }
+    ];
+    buildSortModule("m1Container", m1Data, [
+      "Поисковый (черновой)",
+      "Демонстрационный",
+      "Функциональный",
+      "Предсерийный",
+      "Цифровой прототип"
+    ]);
+    function checkM1() { evaluateSortModule("m1Container", m1Data, "m1Feedback", 1); }
+
+    // --- МОДУЛЬ 2: УСТРОЙСТВО FDM-ПРИНТЕРА И ВЫБОР ТЕХНОЛОГИИ ---
+    const printerPartsInfo = {
+      spool: "<strong>1. Катушка с филаментом:</strong> пластиковая нить стандартного диаметра 1,75 мм. Самые распространённые пластики — экологичный и простой в печати <em>PLA</em>, прочный и влагостойкий <em>PETG</em>, а также термостойкий <em>ABS</em>.",
+      extruder: "<strong>2. Экструдер (подающий механизм):</strong> узел с шаговым двигателем и зубчатым колесом, который с высокой точностью проталкивает пластиковую нить в нагревательный блок.",
+      nozzle: "<strong>3. Хотэнд и сопло:</strong> нагревательная камера, расплавляющая пластик до температуры <strong>190–260 °C</strong>, и латунное или стальное сопло (обычно диаметром <strong>0,4 мм</strong>), через которое тонкая нить укладывается на слой.",
+      bed: "<strong>4. Нагреваемый рабочий стол:</strong> ровная платформа с подогревом (50–100 °C), на которой строится деталь. Подогрев обеспечивает надёжное прилипание первого слоя и защищает деталь от коробления.",
+      axes: "<strong>5. Направляющие и двигатели осей X, Y, Z:</strong> обеспечивают точное перемещение печатающей головки и стола в трёхмерном пространстве по командам G-code с точностью до сотых долей миллиметра."
+    };
+
+    function showPrinterPart(key, btn) {
+      const btns = document.getElementById("printerPartBtns").querySelectorAll(".choice-btn");
+      btns.forEach(b => b.classList.remove("selected"));
+      if (btn) {
+        btn.classList.add("selected");
+      } else {
+        const idx = ["spool", "extruder", "nozzle", "bed", "axes"].indexOf(key);
+        if (idx >= 0 && btns[idx]) btns[idx].classList.add("selected");
+      }
+      document.getElementById("printerPartDesc").innerHTML = printerPartsInfo[key];
+    }
+    showPrinterPart("spool");
+
+    const m2Data = [
+      {
+        text: "Ювелирной мастерской нужна миниатюрная модель кольца с мельчайшим узором и идеально гладкой поверхностью.",
+        answer: "SLA (фотополимер)"
+      },
+      {
+        text: "Школьному кружку робототехники требуется недорого напечатать корпуса и кронштейны из катушки пластика PLA.",
+        answer: "FDM (филамент)"
+      },
+      {
+        text: "Авиационному предприятию нужна сверхпрочная металлическая деталь сложной внутренней формы без отламываемых поддержек.",
+        answer: "SLS / SLM (порошок)"
+      },
+      {
+        text: "Стоматологическая клиника печатает высокоточные модели челюстей из жидкой светоотверждаемой смолы.",
+        answer: "SLA (фотополимер)"
+      }
+    ];
+    buildSortModule("m2Container", m2Data, ["FDM (филамент)", "SLA (фотополимер)", "SLS / SLM (порошок)"]);
+    function checkM2() { evaluateSortModule("m2Container", m2Data, "m2Feedback", 2); }
+
+    // --- МОДУЛЬ 3.1: СИМУЛЯТОР СЛАЙСЕРА FDM ---
+    function setSlicer(param, val, btn) {
+      state.slicer[param] = val;
+      const map = { layer: "slLayerBtns", infill: "slInfillBtns", supports: "slSupBtns", mat: "slMatBtns" };
+      document.getElementById(map[param]).querySelectorAll(".choice-btn").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      renderSlicerPreview();
+    }
+
+    function renderSlicerPreview() {
+      const { layer, infill, supports, mat } = state.slicer;
+
+      const matColors = {
+        PLA: { fill: "#dbeafe", stroke: "#2563eb", temp: "205 °C / стол 60 °C", note: "Лёгкий в печати, но размягчается на солнце (>55 °C)" },
+        PETG: { fill: "#ccfbf1", stroke: "#0f766e", temp: "235 °C / стол 80 °C", note: "Прочный, влагостойкий, подходит для улицы и нагрузок" },
+        FLEX: { fill: "#fef3c7", stroke: "#d97706", temp: "225 °C / стол 50 °C", note: "Гибкий как резина, не подходит для жёсткого крепежа" }
+      };
+      const mc = matColors[mat];
+
+      const layerStepPx = layer === 0.12 ? 4 : (layer === 0.20 ? 7 : 10);
+      const infillStepPx = infill === 15 ? 20 : (infill === 50 ? 10 : 5);
+
+      let svg = `<svg viewBox="0 0 340 215" style="max-width:340px;">`;
+      svg += `<defs>
+        <clipPath id="bracketClip">
+          <path d="M 65 45 L 265 45 L 265 88 L 130 88 L 130 185 L 65 185 Z" />
+        </clipPath>
+      </defs>`;
+
+      // Стол 3D-принтера
+      svg += `<rect x="25" y="185" width="290" height="12" rx="3" fill="#334155" />`;
+      svg += `<text x="170" y="210" font-size="11" font-weight="bold" text-anchor="middle" fill="#475569">Рабочий стол 3D-принтера (сечение кронштейна)</text>`;
+
+      // Поддержки под нависанием (x: 135..260, y: 88..185)
+      if (supports) {
+        svg += `<rect x="134" y="88" width="128" height="97" fill="#f1f5f9" stroke="#64748b" stroke-width="1.2" stroke-dasharray="4,3" />`;
+        for (let sx = 148; sx < 260; sx += 18) {
+          svg += `<line x1="${sx}" y1="88" x2="${sx}" y2="185" stroke="#64748b" stroke-width="1.6" stroke-dasharray="4,3" />`;
+        }
+        svg += `<text x="198" y="140" font-size="11" font-weight="bold" text-anchor="middle" fill="#0f766e">Поддержки (Supports)</text>`;
+      } else {
+        // Предупреждение о провисании пластика в воздухе
+        svg += `<path d="M 134 90 Q 165 106 198 94 Q 230 108 262 90" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="3,2" />`;
+        svg += `<text x="198" y="132" font-size="11" font-weight="bold" text-anchor="middle" fill="#dc2626">⚠ Нависание 90° без опоры!</text>`;
+        svg += `<text x="198" y="147" font-size="10" font-weight="bold" text-anchor="middle" fill="#dc2626">Пластик провиснет в воздухе</text>`;
+      }
+
+      // Тело кронштейна
+      svg += `<path d="M 65 45 L 265 45 L 265 88 L 130 88 L 130 185 L 65 185 Z" fill="${mc.fill}" />`;
+
+      // Сетка заполнения (Infill) и горизонтальные слои внутри клипа
+      svg += `<g clip-path="url(#bracketClip)">`;
+      for (let d = -200; d <= 360; d += infillStepPx) {
+        svg += `<line x1="${d}" y1="40" x2="${d + 150}" y2="190" stroke="${mc.stroke}" stroke-opacity="0.32" stroke-width="1.2" />`;
+        svg += `<line x1="${d + 150}" y1="40" x2="${d}" y2="190" stroke="${mc.stroke}" stroke-opacity="0.22" stroke-width="1.2" />`;
+      }
+      for (let y = 45; y <= 185; y += layerStepPx) {
+        svg += `<line x1="60" y1="${y}" x2="270" y2="${y}" stroke="${mc.stroke}" stroke-opacity="0.45" stroke-width="1" />`;
+      }
+      svg += `</g>`;
+
+      // Контур кронштейна (периметры)
+      svg += `<path d="M 65 45 L 265 45 L 265 88 L 130 88 L 130 185 L 65 185 Z" fill="none" stroke="${mc.stroke}" stroke-width="3" />`;
+
+      // Сопло сверху
+      svg += `<polygon points="158,18 176,18 167,36" fill="#f59e0b" stroke="#b45309" stroke-width="1.5" />`;
+      svg += `<text x="167" y="13" font-size="10" font-weight="bold" text-anchor="middle" fill="#0f172a">Слой: ${layer.toFixed(2)} мм • Заполнение: ${infill}%</text>`;
+      svg += `</svg>`;
+
+      document.getElementById("slicerPreviewSvg").innerHTML = svg;
+
+      // Расчёт времени и массы пластика
+      const layerFactor = 0.20 / layer;
+      const infillFactor = 0.72 + (infill / 100) * 0.85;
+      const supTime = supports ? 18 : 0;
+      const totalMins = Math.round(48 * layerFactor * infillFactor + supTime);
+      const hrs = Math.floor(totalMins / 60);
+      const remM = totalMins % 60;
+      const grams = Math.round(24 * infillFactor + (supports ? 9 : 0));
+
+      document.getElementById("slicerTelemetry").innerHTML = `
+        <div><strong>Материал:</strong> ${mat} (${mc.temp})</div>
+        <div><strong>Расчётное время печати:</strong> ${hrs > 0 ? hrs + " ч " : ""}${remM} мин</div>
+        <div><strong>Расход филамента:</strong> ~${grams} г</div>
+        <div style="margin-top:4px; color:#cbd5e1;">${mc.note}</div>
+      `;
+    }
+    renderSlicerPreview();
+
+    function checkSlicerMission() {
+      const { infill, supports, mat } = state.slicer;
+      const fb = document.getElementById("m3aFeedback");
+      const errors = [];
+
+      if (mat !== "PETG") {
+        errors.push("для жёсткого уличного крепления лучше выбрать прочный и влагостойкий пластик PETG");
+      }
+      if (infill < 50) {
+        errors.push("заполнение 15% слишком слабое для силовой детали — увеличь заполнение до 50% или 85%");
+      }
+      if (!supports) {
+        errors.push("включи поддержки (Supports), иначе верхний нависающий выступ провиснет при печати");
+      }
+
+      if (errors.length === 0) {
+        state.m3aDone = true;
+        fb.style.color = "var(--success)";
+        fb.textContent = "Верно! Параметры слайсера подобраны грамотно: уличный кронштейн напечатается без провисаний и выдержит нагрузку.";
+        if (state.m3aDone && state.m3bDone) markStepDone(3);
+      } else {
+        fb.style.color = "var(--danger)";
+        fb.textContent = "Нужно доработать настройки: " + errors.join("; ") + ".";
+      }
+    }
+
+    // --- МОДУЛЬ 3.2: КОНСТРУКТОР ЭТАПОВ 3D-ПЕЧАТИ ---
+    const orderSteps = [
+      { id: "p1", label: "Создание цифровой 3D-модели детали в САПР (КОМПАС-3D, SolidWorks, Blender)" },
+      { id: "p2", label: "Экспорт модели в полигональный формат (.STL или .OBJ)" },
+      { id: "p3", label: "Нарезка модели на слои в слайсере и сохранение управляющего файла G-code" },
+      { id: "p4", label: "Передача G-code на 3D-принтер и послойная печать физического прототипа" },
+      { id: "p5", label: "Постобработка детали: снятие поддержек, шлифовка и контроль размеров" }
+    ];
+    const correctSequence = ["p1", "p2", "p3", "p4", "p5"];
+    let userSequence = [];
+
+    function initOrder() {
+      const pool = document.getElementById("orderPool");
+      pool.innerHTML = "";
+      const shuffled = [...orderSteps].sort(() => Math.random() - 0.5);
+      shuffled.forEach(item => {
+        pool.innerHTML += `<button class="order-chip" id="chip-${item.id}" onclick="pickOrderStep('${item.id}', '${item.label}')">${item.label}</button>`;
+      });
+    }
+
+    function pickOrderStep(id, label) {
+      if (userSequence.length >= 5 || userSequence.includes(id)) return;
+      userSequence.push(id);
+      document.getElementById(`chip-${id}`).style.display = "none";
+      const idx = userSequence.length - 1;
+      const slot = document.getElementById(`slot-${idx}`);
+      slot.classList.add("filled");
+      slot.textContent = `Этап ${idx + 1}: ${label}`;
+    }
+
+    function resetOrder() {
+      userSequence = [];
+      document.querySelectorAll(".order-chip").forEach(el => el.style.display = "inline-block");
+      for (let i = 0; i < 5; i++) {
+        const slot = document.getElementById(`slot-${i}`);
+        slot.classList.remove("filled");
+        slot.style.borderColor = "";
+        slot.textContent = `Этап ${i + 1}: ...`;
+      }
+      document.getElementById("m3bFeedback").textContent = "";
+    }
+
+    function checkOrder() {
+      if (userSequence.length < 5) {
+        document.getElementById("m3bFeedback").style.color = "var(--warning)";
+        document.getElementById("m3bFeedback").textContent = "Сначала расставь все 5 этапов!";
+        return;
+      }
+      let ok = 0;
+      for (let i = 0; i < 5; i++) {
+        const slot = document.getElementById(`slot-${i}`);
+        if (userSequence[i] === correctSequence[i]) {
+          slot.style.borderColor = "var(--success)";
+          ok++;
+        } else {
+          slot.style.borderColor = "var(--danger)";
+        }
+      }
+      const fb = document.getElementById("m3bFeedback");
+      if (ok === 5) {
+        state.m3bDone = true;
+        fb.style.color = "var(--success)";
+        fb.textContent = "Отлично! Полная технологическая цепочка 3D-печати выстроена абсолютно точно.";
+        if (state.m3aDone && state.m3bDone) markStepDone(3);
+      } else {
+        fb.style.color = "var(--danger)";
+        fb.textContent = "Есть ошибки (красные рамки). Нажми «Сбросить» и попробуй снова.";
+      }
+    }
+    initOrder();
+
+    // --- МОДУЛЬ 4: ИТОГОВЫЙ ТЕСТ С РАЗБОРОМ ОШИБОК ---
+    const quizData = [
+      {
+        q: "1. Какой вид прототипа изготавливают в первую очередь для проверки работоспособности механизма и прочности конструкции под нагрузкой?",
+        options: [
+          "Демонстрационный (визуальный) прототип",
+          "Функциональный (рабочий) прототип",
+          "Бумажный набросок"
+        ],
+        correct: 1,
+        explain: "Функциональный прототип предназначен именно для испытаний работы механизмов и прочности, тогда как демонстрационный проверяет лишь внешний вид."
+      },
+      {
+        q: "2. Почему технологии 3D-печати называют аддитивными?",
+        options: [
+          "Потому что деталь создаётся путём срезания стружки с цельной заготовки",
+          "Потому что объект формируется путём послойного добавления (наращивания) материала",
+          "Потому что для печати используют только бумагу"
+        ],
+        correct: 1,
+        explain: "Слово «аддитивный» (от англ. add — добавлять) означает послойное наращивание материала, в отличие от субтрактивной обработки резанием."
+      },
+      {
+        q: "3. Какой расходный материал используется в классическом FDM 3D-принтере?",
+        options: [
+          "Пластиковая нить на катушке (филамент)",
+          "Жидкая фотополимерная смола",
+          "Металлический лист"
+        ],
+        correct: 0,
+        explain: "FDM-принтеры плавят и укладывают пластиковую нить (филамент — PLA, PETG, ABS)."
+      },
+      {
+        q: "4. Какая технология 3D-печати отверждает жидкую фотополимерную смолу с помощью ультрафиолетового излучения?",
+        options: ["FDM", "SLA / MSLA", "SLS"],
+        correct: 1,
+        explain: "В технологии стереолитографии (SLA / MSLA) каждый слой жидкой фотополимерной смолы засвечивается УФ-лазером или УФ-матрицей."
+      },
+      {
+        q: "5. Как называется компьютерная программа, которая разрезает 3D-модель (.STL) на горизонтальные слои и создаёт файл G-code для 3D-принтера?",
+        options: ["Слайсер", "Архиватор", "Антивирус"],
+        correct: 0,
+        explain: "Слайсер (от англ. slice — нарезать ломтиками) преобразует 3D-модель в послойные команды G-code."
+      },
+      {
+        q: "6. Как изменится деталь при уменьшении высоты слоя с 0,28 мм до 0,12 мм в настройках слайсера?",
+        options: [
+          "Поверхность станет более гладкой и детальной, но время печати заметно увеличится",
+          "Деталь напечатается в два раза быстрее",
+          "Деталь уменьшится по размеру в два раза"
+        ],
+        correct: 0,
+        explain: "Более тонкие слои делают поверхность ровнее, но принтеру приходится уложить больше слоёв, поэтому время печати растёт."
+      },
+      {
+        q: "7. Для чего в настройках слайсера включают генерацию поддержек (Supports)?",
+        options: [
+          "Чтобы ускорить нагрев рабочего стола",
+          "Чтобы удерживать нависающие элементы детали, которые иначе печатались бы в воздухе и провисли",
+          "Чтобы изменить цвет пластика"
+        ],
+        correct: 1,
+        explain: "Поддержки создают временную опору под нависающими частями модели; после завершения печати их аккуратно удаляют."
+      },
+      {
+        q: "8. Какой узел FDM 3D-принтера нагревается до 200–250 °C и требует особой осторожности из-за риска термического ожога?",
+        options: [
+          "Катушка с филаментом",
+          "Хотэнд и сопло печатающей головки",
+          "Рама принтера"
+        ],
+        correct: 1,
+        explain: "При работе FDM-принтера хотэнд и сопло разогреваются свыше 200 °C, поэтому касаться их руками во время печати и до полного остывания запрещено."
+      }
+    ];
+    const quizAnswers = {};
+
+    function renderQuiz() {
+      const box = document.getElementById("finalQuizContainer");
+      box.innerHTML = "";
+      quizData.forEach((item, qIdx) => {
+        const div = document.createElement("div");
+        div.className = "quiz-q";
+        div.innerHTML = `
+          <div><strong>${item.q}</strong></div>
+          <div id="quiz-opts-${qIdx}">
+            ${item.options.map((opt, oIdx) => `
+              <button class="quiz-opt" onclick="selectQuiz(${qIdx}, ${oIdx}, this)">${opt}</button>
+            `).join("")}
+          </div>
+          <div class="quiz-explain" id="quiz-exp-${qIdx}"><strong>Пояснение:</strong> ${item.explain}</div>
+        `;
+        box.appendChild(div);
+      });
+    }
+
+    function selectQuiz(qIdx, oIdx, btn) {
+      quizAnswers[qIdx] = oIdx;
+      const box = document.getElementById(`quiz-opts-${qIdx}`);
+      box.querySelectorAll(".quiz-opt").forEach(b => b.classList.remove("selected", "correct", "wrong"));
+      btn.classList.add("selected");
+    }
+
+    function finishLesson() {
+      if (Object.keys(quizAnswers).length < quizData.length) {
+        alert("Ответь на все 8 вопросов теста перед завершением урока!");
+        return;
+      }
+
+      let score = 0;
+      quizData.forEach((item, qIdx) => {
+        const chosen = quizAnswers[qIdx];
+        const box = document.getElementById(`quiz-opts-${qIdx}`);
+        const exp = document.getElementById(`quiz-exp-${qIdx}`);
+        box.querySelectorAll(".quiz-opt").forEach((b, oIdx) => {
+          b.classList.remove("selected", "correct", "wrong");
+          if (oIdx === item.correct) b.classList.add("correct");
+          else if (oIdx === chosen && chosen !== item.correct) b.classList.add("wrong");
+        });
+        if (chosen === item.correct) {
+          score++;
+          exp.style.display = "none";
+        } else {
+          exp.style.display = "block";
+        }
+      });
+
+      const pct = Math.round((score / quizData.length) * 100);
+      let grade = 2;
+      let label = "Нужно повторить тему";
+      if (score >= 7) { grade = 5; label = "Отлично"; }
+      else if (score >= 5) { grade = 4; label = "Хорошо"; }
+      else if (score >= 4) { grade = 3; label = "Удовлетворительно"; }
+
+      markStepDone(4);
+      const mins = Math.max(1, Math.round(state.secondsElapsed / 60));
+      const practiceDone = [state.completedSteps[1], state.completedSteps[2], state.completedSteps[3]].filter(Boolean).length;
+      const code = `TECH8-3DP-251126-${score}${grade}`;
+
+      document.getElementById("certStudentName").textContent = state.studentName || "Ученик 8 класса";
+      document.getElementById("certGradeText").textContent = `Оценка: ${grade} (${label})`;
+      document.getElementById("certStats").textContent = `Тест: ${score} из ${quizData.length} (${pct}%) • Время работы: ~${mins} мин.`;
+      document.getElementById("certPracticeSummary").textContent = `Выполнено практических модулей: ${practiceDone} из 3`;
+      document.getElementById("certCode").textContent = `Код проверки: ${code}`;
+      document.getElementById("certificateSection").style.display = "block";
+      document.getElementById("certificateSection").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function resetAll() {
+      if (confirm("Сбросить прогресс и пройти урок заново?")) {
+        location.reload();
+      }
+    }
+
+    renderQuiz();
+  </script>
+</body>
+</html>
